@@ -30,11 +30,14 @@ salaryDF = apply(salaryDF,c(1,2),as.numeric)
 
 # calculate average
 glassdoor$meanSalary = apply(salaryDF, 1, mean)
+glassdoor$rangeSalary = apply(salaryDF, 1, function(x) max(x) - min(x))
+
 
 # annualize hourly wage, assuming 2080 working hours per year
-glassdoor$meanSalary = ifelse(grepl("(?i)hour", glassdoor$Salary.Estimate), 
-                              2.080*glassdoor$meanSalary, 
-                              glassdoor$meanSalary)
+#glassdoor$meanSalary = ifelse(grepl("(?i)hour", glassdoor$Salary.Estimate), 2.080*glassdoor$meanSalary, glassdoor$meanSalary)
+
+# remove hourly wage
+glassdoor = glassdoor[!grepl("(?i)hour", glassdoor$Salary.Estimate),]
 
 # categoriuze type of ownership
 temp = str_extract(glassdoor$Type.of.ownership, "(?i)private|public")  
@@ -42,4 +45,5 @@ temp[is.na(temp)] = "other"
 temp[is.na(glassdoor$Type.of.ownership)] = NA
 glassdoor$transformed.ownership = temp
 
-#
+# categorize year founded
+glassdoor$Founded.cat = cut(glassdoor$Founded, breaks = c(0,1978,1999,2010,2019))
