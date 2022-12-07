@@ -31,9 +31,17 @@ step(mod, direction = "both")
 # Both converge to transformed.ownership ~ Founded.cat + Revenue + Size + Sector
 optimized_mod = multinom(transformed.ownership ~ Founded.cat + Revenue + Size + Sector, data = glassdoor)
 summary(optimized_mod)
-z <- summary(optimized_mod)$coefficients/summary(optimized_mod)$standard.errors
+x$z <- summary(optimized_mod)$coefficients/summary(optimized_mod)$standard.errors
 # 2-tailed Wald z tests to test significance of coefficients
 p <- (1 - pnorm(abs(z), 0, 1)) * 2
 p
 
-
+coefficents = data.frame(summary(optimized_mod)$coefficients)
+coefficients2 <- mutate_all(coefficents, function(x) as.numeric(as.character(x)))
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+coeff_probs= data.frame(lapply(coefficients2 ,logit2prob))
+          
