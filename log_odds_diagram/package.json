@@ -1,0 +1,14 @@
+{
+  "name": "1cfbaf9bc5b31b47",
+  "main": "1cfbaf9bc5b31b47@403.js",
+  "version": "403.0.0",
+  "homepage": "https://observablehq.com/d/1cfbaf9bc5b31b47",
+  "author": {
+    "name": "Daniel Lee",
+    "url": "https://observablehq.com/@dal3"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
