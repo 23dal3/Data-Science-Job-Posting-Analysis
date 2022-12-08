@@ -1,14 +1,14 @@
 library(stringr)
 library(dplyr)
 # filter out jobs titles without "data"
-glassdoor = read.csv("/Users/rjn/OneDrive/Williams/fall_2022/stat_458/stat458_project/glassdoor_jobs.csv")
+glassdoor = read.csv("glassdoor_jobs.csv")
 glassdoor = glassdoor[grep("(?i)data",glassdoor$Job.Title),]
 glassdoor = glassdoor %>% select(-Competitors)
 for(i in 1:ncol(glassdoor))
   glassdoor[,i] = ifelse(glassdoor[,i] == -1, NA, glassdoor[,i])
 
 # seniority category
-glassdoor$Seniority = grepl("(?i)senior|sr|manager|director|vp|lead|principal|i{2,}", glassdoor$Job.Title)
+glassdoor$Seniority = grepl("(?i)senior|sr|manager|director|vp|lead|principal|expert|chief|i{2,}", glassdoor$Job.Title)
 
 # hq and job location by state
 glassdoor$Location.State = gsub(pattern = ".+, ",x = glassdoor$Location,replacement = "")
