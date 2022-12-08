@@ -15,9 +15,37 @@ library(tidyverse)
 
 set.seed(123)
 
-glassdoor <- read.csv("cleaned_glassdoor.csv")
-names(glassdoor)
+glassdoor <- read.csv("/Users/rjn/OneDrive/Williams/fall_2022/stat_458/stat458_project/cleaned_glassdoor.csv")
 glassdoor <- na.omit(glassdoor[, c("Rating", "Seniority", "meanSalary", "transformed.ownership", "Founded.cat", "Revenue", "Size", "Sector", "rangeSalary", "Location.State", "HQ.State", "Founded")])
+
+# recategorizing Sector variable
+orig = sort(unique(glassdoor$Sector))
+new = c("Finance", 
+        "Heavy Industry", 
+        "Heavy Industry", 
+        "Education and Culture",
+        "Healthcare", 
+        "Heavy Industry", 
+        "Business Services", 
+        "Retail", 
+        "Education and Culture",
+        "Finance",
+        "Other",
+        "Healthcare",
+        "Information Technology",
+        "Finance",
+        "Heavy Industry",
+        "Education and Culture",
+        "Heavy Industry",
+        "Other",
+        "Heavy Industry",
+        "Heavy Industry",
+        "Retail",
+        "Information Technology",
+        "Heavy Industry")
+
+glassdoor$Sector.new = new[match(glassdoor$Sector, orig)]
+
 mod <- multinom(transformed.ownership~ Rating + Seniority + meanSalary + Revenue+ Size + Sector + rangeSalary+ Location.State + HQ.State + Founded, data= na.omit(glassdoor))
 summary(mod)
 z <- summary(mod)$coefficients/summary(mod)$standard.errors
@@ -44,4 +72,3 @@ logit2prob <- function(logit){
   return(prob)
 }
 coeff_probs= data.frame(lapply(coefficients2 ,logit2prob))
-          
