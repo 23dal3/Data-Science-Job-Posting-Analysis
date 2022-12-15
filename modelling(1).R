@@ -95,15 +95,59 @@ rev_mod = multinom(transformed.ownership ~ Revenue, data = glassdoor)
 pis <-predict(rev_mod, data.frame(Revenue = c("Unknown / Non-Applicable","100 to 500 billion (INR)","500+ billion (INR)","100 to 500 million (INR)","10 to 50 billion (INR)",  "10 to 50 million (INR)", "50 to 100 billion (INR)", "5 to 10 billion (INR)", "1 to 5 billion (INR)", "500 million to 1 billion (INR)", "50 to 100 million (INR)")), type = "probs"); pis
 pis <- data.frame(c("Unknown / Non-Applicable","100 to 500 billion (INR)","500+ billion (INR)","100 to 500 million (INR)","10 to 50 billion (INR)",  "10 to 50 million (INR)", "50 to 100 billion (INR)", "5 to 10 billion (INR)", "1 to 5 billion (INR)", "500 million to 1 billion (INR)", "50 to 100 million (INR)"), pis)
 colnames(pis)[1] ="Revenue"
-z= c("10 to 50 million (INR)","50 to 100 million (INR)", "100 to 500 million (INR)", "500 million to 1 billion (INR)","1 to 5 billion (INR)","5 to 10 billion (INR)", "10 to 50 billion (INR)","50 to 100 billion (INR)","100 to 500 billion (INR)","500+ billion (INR)","Unknown / Non-Applicable")
+z= c("Unknown / Non-Applicable", "10 to 50 million (INR)","50 to 100 million (INR)", "100 to 500 million (INR)", "500 million to 1 billion (INR)","1 to 5 billion (INR)","5 to 10 billion (INR)", "10 to 50 billion (INR)","50 to 100 billion (INR)","100 to 500 billion (INR)","500+ billion (INR)")
 pis = pis %>% arrange(sapply(Revenue, function(y) which(y == z)))
-pis$Revenue = c("10 to 50 million","50 to 100 million", "100 to 500 million", "500 million to 1 billion","1 to 5 billion","5 to 10 billion", "10 to 50 billion","50 to 100 billion","100 to 500 billion","500+  billion","Unknown / Non-Applicable")
+pis$Revenue = c("10 to 50 million","50 to 100 million", "100 to 500 million", "500 million to 1 billion","1 to 5 billion","5 to 10 billion", "10 to 50 billion","50 to 100 billion","100 to 500 billion","500+ billion","Unknown / Non-Applicable")
 colors <- c("Public" = "aquamarine3", "other" = "aquamarine4", "Private" = "chartreuse4")
-ggplot(data=pis, aes(x=Revenue, y=Public)) +
-  geom_point(aes(col = "Public")) +
-  geom_point(aes( x=Revenue, y = other, col = "other"))+
-  geom_point(aes(x=Revenue, y = Private, col = "Private")) + ggtitle("Probability of a Company Being Public Based on Revenue") + ylab("Probability of being Public")
+pis$Revenue  <- factor(pis$Revenue,levels = c("Unknown / Non-Applicable", "10 to 50 million","50 to 100 million", "100 to 500 million", "500 million to 1 billion","1 to 5 billion","5 to 10 billion", "10 to 50 billion","50 to 100 billion","100 to 500 billion","500+ billion"))
+ggplot(data=pis, aes(x=as.factor(Revenue), y=Public)) +
+  geom_line(aes(col = "Public")) +
+  geom_line(aes( x=as.factor(Revenue), y = other, col = "other"))+
+  geom_line(aes(x=as.factor(Revenue), y = Private, col = "Private")) + ggtitle("Probability of a Company Being Public Based on Revenue") + ylab("Probability of being Public") + xlab("Revenue (INR)")
 ggplot(data=pis, aes(x=Revenue, y=other)) +
   geom_line(col = "blue") +
   geom_line(aes(x=Revenue, y = Public), col = "purple")+
   geom_line(aes(x=Revenue, y = Private), col = "red")
+
+
+
+
+
+
+
+
+pis$Revenue = factor(pis$Revenue, levels = unique(pis$Revenue))
+
+pis %>% gather(-Revenue, key = "Ownership", value = "Predicted Prob") %>% 
+  ggplot(aes(x = Revenue, y = `Predicted Prob`, group = Ownership, col = Ownership)) + geom_smooth(se= FALSE)+ geom_point()+
+  scale_color_brewer(palette = "Paired") + 
+  theme_bw()+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+
+
+
+
+
+
+
+size_mod = multinom(transformed.ownership ~ Size, data = glassdoor)
+pis <-predict(size_mod, data.frame(Size = c("Unknown", "1 to 50 employees", "51 to 200 employees", "201 to 500 employees", "501 to 1000 employees", "1001 to 5000 employees","5001 to 10000 employees","10000+ employees")), type = "probs"); pis
+pis <- data.frame(c("Unknown", "1 to 50 employees", "51 to 200 employees", "201 to 500 employees", "501 to 1000 employees", "1001 to 5000 employees","5001 to 10000 employees","10000+ employees"), pis)
+colnames(pis)[1] ="Size"
+pis$Size  <- factor(pis$Size,levels = c("Unknown", "1 to 50 employees", "51 to 200 employees", "201 to 500 employees", "501 to 1000 employees", "1001 to 5000 employees","5001 to 10000 employees","10000+ employees"))
+pis %>% gather(-Size, key = "Ownership", value = "Predicted Prob") %>% 
+  ggplot(aes(x = Size, y = `Predicted Prob`, group = Ownership, col = Ownership)) + geom_smooth(se= FALSE)+ geom_point()+
+  scale_color_brewer(palette = "Paired") + 
+  theme_bw()+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+founded_mod = multinom(transformed.ownership ~ Founded.cat, data = glassdoor)
+pis <-predict(founded_mod, data.frame(Founded.cat = c( "(0,1.98e+03]","(1.98e+03,2e+03]","(2e+03,2.01e+03]","(2.01e+03,2.02e+03]")), type = "probs"); pis
+pis <- data.frame(c( "(0,1.98e+03]","(1.98e+03,2e+03]","(2e+03,2.01e+03]","(2.01e+03,2.02e+03]"), pis)
+pis$Founded  <- c( "0-1983","1983-2003","2003-2013","2013-2023")
+colnames(pis)[1] ="Founded"
+pis$Founded  <- factor(pis$Founded,levels = c( "0-1983","1983-2003","2003-2013","2013-2023"))
+pis %>% gather(-Founded, key = "Ownership", value = "Predicted Prob") %>% 
+  ggplot(aes(x = Founded, y = `Predicted Prob`, col = Ownership)) + geom_bar()+ 
+  scale_color_brewer(palette = "Paired") + 
+  theme_bw()+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
