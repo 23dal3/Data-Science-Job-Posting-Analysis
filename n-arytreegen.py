@@ -40,6 +40,19 @@ if __name__ == '__main__':
     Public = TreeNode('Public')
     odds.children.append(Public)
     # iteration for public-sub tree: Sector - Revenue - Size - Founded
+
+    # sectors = [key for key in public.keys() if "Sector" in key]
+    # revenues = [key for key in public.keys() if "Revenue" in key]
+    # sizes = [key for key in public.keys() if "Size" in key]
+    # foundeds = [key for key in public.keys() if "Founded" in key]
+
+    # for sector in sectors:
+    #     for revenue in revenues:
+    #         for size in sizes:
+    #             for founded in foundeds:
+
+
+
     for key in public.keys():
         if "Sector" in key:
             keynode = TreeNode(key)

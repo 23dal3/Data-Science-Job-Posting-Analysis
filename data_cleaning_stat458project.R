@@ -8,7 +8,7 @@ for(i in 1:ncol(glassdoor))
   glassdoor[,i] = ifelse(glassdoor[,i] == -1, NA, glassdoor[,i])
 
 # seniority category
-glassdoor$Seniority = grepl("(?i)senior|sr|manager|director|vp|lead|principal|expert|chief|i{2,}", glassdoor$Job.Title)
+glassdoor$Seniority = grepl("(?i)senior|sr|manager|director|vp|lead|principal|expert|chief|II|III|head|i{2,}", glassdoor$Job.Title)
 
 # hq and job location by state
 glassdoor$Location.State = gsub(pattern = ".+, ",x = glassdoor$Location,replacement = "")
@@ -35,6 +35,10 @@ glassdoor$rangeSalary = apply(salaryDF, 1, function(x) max(x) - min(x))
 
 # annualize hourly wage, assuming 2080 working hours per year
 #glassdoor$meanSalary = ifelse(grepl("(?i)hour", glassdoor$Salary.Estimate), 2.080*glassdoor$meanSalary, glassdoor$meanSalary)
+# sizeList = strsplit(glassdoor$Size, " to ")
+# sizeDF = as.data.frame(t(sapply(sizeList, str_extract, "[0-9]+")))
+# names(sizeDF) = c("Size.lwr", "Size.upr")
+# sizeDF = apply(sizeDF,c(1,2),as.numeric)
 
 # remove hourly wage
 glassdoor = glassdoor[!grepl("(?i)hour", glassdoor$Salary.Estimate),]
@@ -47,3 +51,5 @@ glassdoor$transformed.ownership = temp
 
 # categorize year founded
 glassdoor$Founded.cat = cut(glassdoor$Founded, breaks = c(0,1978,1999,2010,2019))
+glassdoor$Revenue = iconv(glassdoor$Revenue, "latin1", "ASCII", sub="")
+write.csv(glassdoor, "cleaned_glassdoor.csv", row.names=FALSE)
