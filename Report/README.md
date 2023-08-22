@@ -1,4 +1,4 @@
-﻿STAT 458 - Final Project Report Daniel Lee and Jianing Ren Dec 12, 2022
+Final Project Report Daniel Lee and Jianing Ren Dec 12, 2022
 
 1. **Introduction**
 1. **Motivation**
