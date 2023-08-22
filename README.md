@@ -13,8 +13,5 @@ The dataset contains 887 jobs with 56% of the employers being privately owned, 2
 Using this model, we attempt to study if any of these company characteristics can effectively distinguish between public, private, and other (government, NPO) ownerships. For example, do private companies tend to pay more after controlling for “seniority” of the job applicant? Do public companies have lower ratings? Does California attract more public companies that employ data science specialists, or does Washington DC attract more government/NPOs? As an extension, we can even try to predict the rating of a company through an ordinal multinomial model using its ownership category and the rest of the variables. All of these are important and relevant questions for students in a senior statistics seminar looking for jobs in the age of “Big Data”, and can provide insight into the broader job market.
 
 ## *R* Analysis <a name="Analysis"></a>
-Explanation Goes Here
+Analysis can be found [here](Report/README.md).
 
-## Files <a name="Files"></a>
-* `glassdoor_jobs.csv` 
-  *  A csv file from [kaggle](https://www.kaggle.com/datasets/rkb0023/glassdoor-data-science-jobs) that is web-scraped Data Science jobs containing columns     of salary estimates, job location, company size, title, ownership type, and more.
